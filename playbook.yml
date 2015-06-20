@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  sudo: true
+  pre_tasks:
+    - name: apt-get update
+      apt: update_cache=yes
+    - name: ensure required packages are installed for base config
+      apt: name={{ item }} state=latest update_cache=yes
+      with_items:
+        - make
+        - gcc
+        - git
+        - unzip
+        - mongodb
+        - maven
+    - name: sync time
+      shell: ntpdate pool.ntp.org
+  roles:
+    - glassfish4
+    - crol-webapp

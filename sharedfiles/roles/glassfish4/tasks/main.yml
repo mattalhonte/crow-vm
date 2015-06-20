@@ -1,0 +1,31 @@
+---
+- name: installs unzip and java
+  apt: name={{ item }} state=latest
+  with_items:
+    - unzip
+    - openjdk-7-jdk
+    - openjdk-7-jre
+
+- name: creates the glassfish group
+  group: name=glassfish state=present
+
+- name: creates the glassfish user
+  user: name=glassfish groups="glassfish,sudo" state=present system=true append=yes
+
+- name: unzips GlassFish package
+  unarchive: src=glassfish-4.1.zip dest=/opt owner=glassfish creates=/opt/glassfish4/README.txt copy=yes
+
+- name: modify path for GlassFish
+  lineinfile: dest=/home/glassfish/.profile line="export PATH=/opt/glassfish4/bin:$PATH"
+
+- name: deploy hello.war for testing
+  copy: src=hello.war dest=/home/glassfish/hello.war owner=glassfish group=glassfish force=no
+
+- name: configure GlassFish Admin Password
+  script: glassfish.sh creates=/opt/glassfish4/bin/passwords.txt
+
+- name: make GlassFish Service
+  command: /opt/glassfish4/bin/asadmin create-service creates=/etc/init.d/GlassFish_domain1
+
+- name: start GlassFish Service
+  service: name=GlassFish_domain1 state=started

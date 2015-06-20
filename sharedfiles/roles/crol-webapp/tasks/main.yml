@@ -1,0 +1,6 @@
+---
+# create a directory if it doesn't exist
+- file: "path={{ user_dev_folder }} state=directory owner={{ user }} group={{ user }} mode=0755"
+
+- name: "Copy deploy-crol-app.sh"
+  action: "template src=deploy-crol-app.sh.j2 dest={{ user_dev_folder }}/deploy-crol-app.sh owner={{ user }} group={{ user }} mode=0755"

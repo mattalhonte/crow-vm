@@ -1,0 +1,21 @@
+cd {{ user_dev_folder }}
+
+echo 'Building '{{ app_name }}' Project ...'
+
+echo '1. Taking a backup of the existing codebase using Timestamp ----------'
+export tstmp=$(date +'%d-%m-%Y_%T')
+mv crol-interface {{ app_name }}'_'$tstmp
+
+echo '2. Clone Sourcecode from Git ----------'
+git clone {{app_github_uri}} {{ app_name }}
+
+cd {{ app_name }}
+
+echo '3. Compile and Package the Project'
+mvn clean compile install -o
+
+echo '4. Undeploying Existing ----------'
+sudo {{ gf_bin }}/asadmin --user admin --passwordfile {{ gf_bin }}/{{ gf_passwordsfile }} undeploy {{ app_deploy_name }}
+
+echo '5. Deploy the latest'
+sudo {{ gf_bin }}/asadmin --user admin --passwordfile {{ gf_bin }}/{{ gf_passwordsfile }} deploy --contextroot /crol target/{{ app_deploy_name }}.war

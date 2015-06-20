@@ -1,0 +1,14 @@
+---
+
+# app_github_uri: https://github.com/CityOfNewYork/CROL-WebApp.git
+app_github_uri: https://github.com/cds-amal/CROL-WebApp.git
+
+app_name: crol-interface
+app_deploy_name: commune-crol-server-0.1
+
+gf_bin: /opt/glassfish4/bin
+gf_user: admin
+gf_passwordsfile: passwords.txt
+
+user: vagrant
+user_dev_folder: /home/vagrant/dev
